@@ -27,35 +27,41 @@ const Home = () => {
         <div className="home-page fade-in">
             <Hero />
 
-            <section className="features-section container">
-                <div className="features-grid">
-                    <div className="feature-card">
-                        <Package size={32} />
-                        <div className="feature-info">
-                            <h3>Secure Packaging</h3>
-                            <p>British standards in every box</p>
-                        </div>
-                    </div>
-                    <div className="feature-card">
-                        <Smartphone size={32} />
-                        <div className="feature-info">
-                            <h3>Live Tracking</h3>
-                            <p>Real-time delivery pulse</p>
-                        </div>
-                    </div>
-                    <div className="feature-card">
-                        <CreditCard size={32} />
-                        <div className="feature-info">
-                            <h3>Secure Checkout</h3>
-                            <p>PCI-DSS Stripe compliance</p>
-                        </div>
-                    </div>
-                    <div className="feature-card">
-                        <Clock size={32} />
-                        <div className="feature-info">
-                            <h3>Fast Delivery</h3>
-                            <p>UK-wide next day arrival</p>
-                        </div>
+            <section className="features-section">
+                <div className="ticker-container">
+                    <div className="ticker-track">
+                        {[...Array(2)].map((_, i) => (
+                            <div key={i} className="features-grid">
+                                <div className="feature-card">
+                                    <Package size={32} />
+                                    <div className="feature-info">
+                                        <h3>Secure Packaging</h3>
+                                        <p>British standards in every box</p>
+                                    </div>
+                                </div>
+                                <div className="feature-card">
+                                    <Smartphone size={32} />
+                                    <div className="feature-info">
+                                        <h3>Live Tracking</h3>
+                                        <p>Real-time delivery pulse</p>
+                                    </div>
+                                </div>
+                                <div className="feature-card">
+                                    <CreditCard size={32} />
+                                    <div className="feature-info">
+                                        <h3>Secure Checkout</h3>
+                                        <p>PCI-DSS Stripe compliance</p>
+                                    </div>
+                                </div>
+                                <div className="feature-card">
+                                    <Clock size={32} />
+                                    <div className="feature-info">
+                                        <h3>Fast Delivery</h3>
+                                        <p>UK-wide next day arrival</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>

@@ -3,24 +3,50 @@
 }
 
 .features-section {
-    margin: 4rem auto;
+    margin: 4rem 0;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-card);
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.ticker-container {
+    width: 100%;
+}
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: scroll 40s linear infinite;
 }
 
 .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
-    background: white;
-    padding: 3rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
+    display: flex;
+    gap: 5rem;
+    padding: 1rem 2.5rem;
+    white-space: nowrap;
 }
 
 .feature-card {
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    min-width: 300px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
 }
 
 .feature-card svg {
@@ -30,6 +56,8 @@
 .feature-info h3 {
     font-size: 1.125rem;
     margin-bottom: 0.25rem;
+    color: var(--text-main);
+    font-weight: 700;
 }
 
 .feature-info p {
@@ -62,6 +90,7 @@
 
 .section-header h2 {
     font-size: 2.5rem;
+    color: var(--text-main);
 }
 
 .section-header p {
@@ -81,12 +110,13 @@
 
 .cta-card {
     padding: 5rem;
-    border-radius: 2rem;
+    border-radius: 2.5rem;
     text-align: center;
     position: relative;
     overflow: hidden;
-    background: var(--primary);
+    background: #0f172a;
     color: white;
+    border: 1px solid var(--border);
 }
 
 .cta-content {
@@ -108,6 +138,7 @@
     font-size: 1.25rem;
     opacity: 0.9;
     margin-bottom: 2.5rem;
+    color: #f3f4f6; /* Keep readable on dark cta card */
 }
 
 .newsletter-form {
@@ -123,7 +154,7 @@
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: white; /* Stays white because parent .cta-card is dark background */
     outline: none;
     transition: all 0.3s ease;
 }
@@ -145,7 +176,7 @@
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
 }
 
 .loader {
@@ -159,22 +190,15 @@
 }
 
 @keyframes pulse {
-    0% {
-        opacity: 0.5;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.5;
-    }
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 
 @media (max-width: 768px) {
     .cta-card {
         padding: 3rem 1.5rem;
+        border-radius: 1.5rem;
     }
 
     .cta-card h2 {

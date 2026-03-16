@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Instagram, Facebook, MapPin, Phone, Mail, MessageCircle } from 'lucide-react';
 import { AuthProvider } from './context/AuthContext';
@@ -19,16 +19,28 @@ import Returns from './pages/Returns';
 import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import AboutUs from './pages/AboutUs';
 import './styles/index.css';
 
 const App = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.body.className = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <Router>
       <AuthProvider>
-        <SocketProvider>
-          <CartProvider>
-            <div className="app">
-              <Navbar />
+        <CartProvider>
+          <SocketProvider>
+            <div className={`app ${theme}`}>
+              <Navbar toggleTheme={toggleTheme} currentTheme={theme} />
               <main>
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -44,13 +56,14 @@ const App = () => {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/about-us" element={<AboutUs />} />
                   <Route path="/profile" element={<div className="container" style={{ padding: '5rem' }}><h2>Profile Page Coming Soon</h2><Link to="/" className="btn-primary" style={{ marginTop: '2rem' }}>Back Home</Link></div>} />
                 </Routes>
               </main>
 
               <SupportWidget />
 
-              <footer style={{ background: '#0f172a', color: 'white', padding: '5rem 0 2rem', marginTop: '6rem', borderTop: '1px solid rgba(212, 175, 55, 0.2)' }}>
+              <footer style={{ background: 'var(--footer-bg)', color: 'var(--footer-text)', padding: '5rem 0 2rem', marginTop: '6rem', borderTop: '1px solid rgba(212, 175, 55, 0.2)' }}>
                 <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '4rem' }}>
                   {/* OUR GOAL */}
                   <div>
@@ -93,14 +106,14 @@ const App = () => {
                         <Mail size={18} style={{ color: '#d4af37' }} /> info@hubmart.uk
                       </a>
                     </div>
-                    <a href="https://wa.me/447377399511" target="_blank" rel="noopener noreferrer" style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.75rem', 
-                      background: '#00D95F', 
-                      color: 'white', 
-                      padding: '0.75rem 1.5rem', 
-                      borderRadius: '8px', 
+                    <a href="https://wa.me/447377399511" target="_blank" rel="noopener noreferrer" style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      background: '#00D95F',
+                      color: 'white',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '8px',
                       textDecoration: 'none',
                       fontWeight: '600',
                       width: 'fit-content',
@@ -110,18 +123,18 @@ const App = () => {
                     </a>
                   </div>
                 </div>
-                
+
                 <div style={{ marginTop: '5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem', textAlign: 'center' }}>
-                    <p style={{ opacity: 0.5, fontSize: '0.85rem', letterSpacing: '1px' }}>
-                        © 2026 | HubMart |
-                    </p>
+                  <p style={{ opacity: 0.5, fontSize: '0.85rem', letterSpacing: '1px' }}>
+                    © 2026 | HubMart | Developed by Techmire Solutions
+                  </p>
                 </div>
               </footer>
             </div>
-          </CartProvider>
-        </SocketProvider>
-      </AuthProvider>
-    </Router>
+                </SocketProvider>
+              </CartProvider>
+            </AuthProvider>
+          </Router>
   );
 };
 

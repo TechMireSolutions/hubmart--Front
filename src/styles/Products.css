@@ -28,7 +28,7 @@
 }
 
 .sidebar {
-    background: white;
+    background: var(--bg-card);
     padding: 2rem;
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
