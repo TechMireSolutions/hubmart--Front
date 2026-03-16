@@ -5,12 +5,14 @@ import { CreditCard, Truck, User, ArrowRight, ShieldCheck, CheckCircle2 } from '
 import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import api from '../api';
 import '../styles/Checkout.css';
 
 const Checkout = () => {
     const { items, total, clearCart } = useCart();
     const { user } = useAuth();
+    const { emitEvent } = useSocket();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(1);
@@ -20,6 +22,7 @@ const Checkout = () => {
             navigate('/login');
         }
     }, [user, navigate]);
+
     const [formData, setFormData] = useState({
         full_name: user?.first_name ? `${user.first_name} ${user.last_name || ''}` : '',
         email: user?.email || '',
@@ -45,6 +48,13 @@ const Checkout = () => {
             });
 
             const orderId = orderRes.data.id;
+
+            // Real-time notification to admin via Socket.io
+            emitEvent('new_order', {
+                orderId: orderId,
+                customer: formData.full_name,
+                total: total
+            });
 
             // 2. Create the Stripe Checkout Session
             const stripeRes = await api.post('/shop/checkout/stripe/create-session/', {

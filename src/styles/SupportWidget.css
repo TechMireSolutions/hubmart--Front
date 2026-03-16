@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap');
+
+.support-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.widget-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.widget-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-decoration: none;
+}
+
+.chat-toggle {
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    color: white;
+}
+
+.call-btn {
+    background: #0f172a;
+    color: #d4af37;
+    transform: scale(0.9);
+}
+
+.widget-btn:hover {
+    transform: scale(1.1) translateY(-5px);
+}
+
+.online-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 14px;
+    height: 14px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.chat-window {
+    width: 360px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.chat-header {
+    background: #0f172a;
+    color: white;
+    padding: 1.5rem;
+}
+
+.admin-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    background: #d4af37;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.chat-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #d4af37;
+}
+
+.chat-header small {
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background: url('https://www.transparenttextures.com/patterns/cubes.png');
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+}
+
+.message-wrapper.user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.message-wrapper.admin {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 0.75rem 1rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    position: relative;
+}
+
+.user .message-content {
+    background: #0f172a;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.admin .message-content {
+    background: white;
+    color: #0f172a;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.time {
+    font-size: 0.65rem;
+    opacity: 0.5;
+    margin-top: 4px;
+}
+
+.chat-footer {
+    padding: 1rem;
+    background: white;
+    display: flex;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.chat-footer input {
+    flex: 1;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 25px;
+    outline: none;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.chat-footer input:focus {
+    border-color: #d4af37;
+}
+
+.chat-footer button {
+    width: 42px;
+    height: 42px;
+    background: #d4af37;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.chat-footer button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .support-widget {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    .chat-window {
+        width: calc(100vw - 2rem);
+        height: 400px;
+    }
+}
