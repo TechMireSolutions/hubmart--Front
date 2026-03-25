@@ -1,5 +1,5 @@
 .login-page {
-    min-height: calc(100vh - 80px);
+    min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7,7 +7,7 @@
         radial-gradient(circle at bottom left, rgba(15, 23, 42, 0.05), transparent 50%);
     position: relative;
     overflow: hidden;
-    padding: 2rem;
+    padding: 2rem 1rem;
 }
 
 .login-container {
@@ -101,13 +101,21 @@
     margin-left: 0.25rem;
 }
 
-.login-bg-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
-    z-index: -1;
+@media (max-width: 480px) {
+    .login-page {
+        padding: 1rem;
+    }
+
+    .login-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .login-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .login-bg-glow {
+        width: 300px;
+        height: 300px;
+    }
 }

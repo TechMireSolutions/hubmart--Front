@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight, Github } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Login.css';
 
-const Login = () => {
+const AdminLogin = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({
         username: '',
@@ -29,7 +28,7 @@ const Login = () => {
             if (isLogin) {
                 const result = await login(formData.email, formData.password);
                 if (result.success) {
-                    navigate('/');
+                    navigate('/admin/dashboard');
                 } else {
                     setError(result.message || result.error);
                 }
@@ -42,7 +41,7 @@ const Login = () => {
                     last_name: formData.last_name
                 });
                 if (result.success) {
-                    navigate('/');
+                    navigate('/admin/dashboard');
                 } else {
                     setError(result.message || result.error);
                 }
@@ -55,14 +54,18 @@ const Login = () => {
     };
 
     return (
-        <div className="login-page fade-in">
-            <div className="login-container glass">
-                <div className="login-header">
-                    <h1>{isLogin ? 'Welcome Back' : 'Create Account'}</h1>
-                    <p>{isLogin ? 'Enter your credentials to access premium HubMart' : 'Join the elite British artisanal marketplace'}</p>
+        <div className="login-page fade-in" style={{ background: 'var(--bg-darker)' }}>
+            <div className="login-container glass admin-glass" style={{
+                borderTop: '4px solid #d4af37',
+                boxShadow: '0 8px 32px 0 rgba(212, 175, 55, 0.15)'
+            }}>
+                <div className="login-header" style={{ textAlign: 'center' }}>
+                    <ShieldAlert size={48} style={{ color: '#d4af37', margin: '0 auto 1rem', display: 'block' }} />
+                    <h1 style={{ color: '#d4af37' }}>{isLogin ? 'Admin Portal' : 'Admin Registration'}</h1>
+                    <p>{isLogin ? 'Enter your credentials to access the admin dashboard' : 'Create an admin privileges account (Request Staff Access)'}</p>
                 </div>
 
-                {error && <div className="error-alert">{error}</div>}
+                {error && <div className="error-alert" style={{ backgroundColor: 'rgba(255, 0, 0, 0.1)', color: '#ff4444', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', borderLeft: '4px solid #ff4444' }}>{error}</div>}
 
                 <form onSubmit={handleSubmit} className="login-form">
                     {!isLogin && (
@@ -100,25 +103,26 @@ const Login = () => {
                         />
                     </div>
 
-                    <button type="submit" className="btn-primary login-btn" disabled={loading}>
-                        {loading ? 'Processing...' : (
-                            <>{isLogin ? 'Sign In' : 'Sign Up'} <ArrowRight size={20} /></>
+                    <button type="submit" className="btn-primary login-btn" disabled={loading} style={{ background: 'linear-gradient(45deg, #b58c21, #d4af37)', color: 'black', border: 'none', fontWeight: 'bold' }}>
+                        {loading ? 'Authenticating...' : (
+                            <>{isLogin ? 'Secure Sign In' : 'Sign Up as Admin'} <ArrowRight size={20} /></>
                         )}
                     </button>
                 </form>
 
                 <div className="login-footer">
-                    <p>
-                        {isLogin ? "Don't have an account?" : "Already have an account?"}
-                        <button onClick={() => setIsLogin(!isLogin)} className="toggle-btn">
-                            {isLogin ? 'Create one now' : 'Sign in instead'}
+                    <p style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                        {isLogin ? "Need admin privileges?" : "Already an admin?"}
+                        <button onClick={() => setIsLogin(!isLogin)} className="toggle-btn" style={{ background: 'none', border: 'none', color: '#d4af37', cursor: 'pointer', marginLeft: '0.5rem', fontWeight: '600' }}>
+                            {isLogin ? 'Request account' : 'Sign in instead'}
                         </button>
                     </p>
                 </div>
             </div>
-            <div className="login-bg-glow"></div>
+            
+            <div className="login-bg-glow" style={{ background: 'radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 0%, transparent 70%)' }}></div>
         </div>
     );
 };
 
-export default Login;
+export default AdminLogin;

@@ -24,15 +24,11 @@ export const CartProvider = ({ children }) => {
     };
 
     const addToCart = async (product, quantity = 1) => {
-        // First check if it's a local demo product
-        const isLocal = !product.slug || product.id.toString().startsWith('demo-');
         let currentStock = product.stock_quantity;
 
-        if (!isLocal) {
-            const stockInfo = await verifyStock(product.slug);
-            if (stockInfo) {
-                currentStock = stockInfo.stock;
-            }
+        const stockInfo = await verifyStock(product.slug);
+        if (stockInfo) {
+            currentStock = stockInfo.stock;
         }
 
         if (currentStock < quantity) {

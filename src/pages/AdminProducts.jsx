@@ -30,8 +30,12 @@ const AdminProducts = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!authLoading && !user) {
-            navigate('/login');
+        if (!authLoading) {
+            if (!user) {
+                navigate('/admin/login');
+            } else if (!user.is_staff && !user.is_superuser) {
+                navigate('/');
+            }
         }
     }, [user, authLoading, navigate]);
 
@@ -92,13 +96,8 @@ const AdminProducts = () => {
                 const res = await api.get('/store/categories/');
                 setCategories(res.data);
             } catch (err) {
-                console.error("Failed to fetch categories, using demo data", err);
-                setCategories([
-                    {id: 1, name: 'Grocery'},
-                    {id: 2, name: 'Biscuits'},
-                    {id: 3, name: 'Crisps'},
-                    {id: 4, name: 'Drinks'}
-                ]);
+                console.error("Failed to fetch categories:", err);
+                setCategories([]);
             }
         };
         fetchCategories();
@@ -118,27 +117,19 @@ const AdminProducts = () => {
         setMessage({ type: '', text: '' });
 
         try {
-            const selectedCategory = categories.find(c => c.id.toString() === formData.category);
-            
-            const newProduct = {
-                id: `demo-${Date.now()}`,
-                ...formData,
+            const payload = {
+                category: formData.category,
+                name: formData.name,
                 price: parseFloat(formData.price),
                 stock_quantity: parseInt(formData.stock_quantity),
-                category_name: selectedCategory ? selectedCategory.name : 'Uncategorized',
-                category_slug: selectedCategory ? selectedCategory.slug : '',
-                slug: formData.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
-                image: formData.image || '/img.jpg' // Using custom image or fallback
+                low_stock_threshold: parseInt(formData.low_stock_threshold),
+                description: formData.description,
+                is_active: formData.is_active
             };
 
-            // Save to Local Storage for Demo
-            const existingProducts = JSON.parse(localStorage.getItem('demo_products') || '[]');
-            localStorage.setItem('demo_products', JSON.stringify([newProduct, ...existingProducts]));
+            await api.post('/store/products/', payload);
 
-            // Try real API but don't fail if it's down
-            api.post('/store/products/', newProduct).catch(e => console.log("Backend offline, product saved locally only"));
-
-            setMessage({ type: 'success', text: 'DEMO MODE: Product saved to Local Storage!' });
+            setMessage({ type: 'success', text: 'Product added to the inventory!' });
             setFormData({
                 name: '',
                 category: '',
@@ -150,7 +141,7 @@ const AdminProducts = () => {
                 is_active: true
             });
         } catch (err) {
-            setMessage({ type: 'error', text: 'Failed to add product.' });
+            setMessage({ type: 'error', text: err?.response?.data?.detail || 'Failed to add product.' });
         } finally {
             setLoading(false);
         }

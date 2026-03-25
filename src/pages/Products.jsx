@@ -12,7 +12,7 @@ const Products = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 4;
+    const productsPerPage = 100;
 
     const currentCategory = searchParams.get('category') || '';
 
@@ -22,12 +22,8 @@ const Products = () => {
                 const res = await api.get('/store/categories/');
                 setCategories(res.data);
             } catch (err) {
-                setCategories([
-                    {id: 1, name: 'Grocery', slug: 'grocery'},
-                    {id: 2, name: 'Biscuits', slug: 'biscuits'},
-                    {id: 3, name: 'Crisps', slug: 'crisps'},
-                    {id: 4, name: 'Drinks', slug: 'drinks'}
-                ]);
+                console.error("Failed to fetch categories:", err);
+                setCategories([]);
             }
         };
         fetchMetadata();
@@ -35,50 +31,28 @@ const Products = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            // Priority 1: Load local data IMMEDIATELY (Instant UI)
-            const localProducts = JSON.parse(localStorage.getItem('demo_products') || '[]');
-            const filterLocal = (data) => data.filter(p => {
-                const searchLower = searchQuery.toLowerCase();
-                const matchesSearch = !searchQuery || 
-                    p.name.toLowerCase().includes(searchLower) || 
-                    (p.category_name && p.category_name.toLowerCase().includes(searchLower));
-                
-                const matchesCat = !currentCategory || p.category_slug === currentCategory;
-                return matchesSearch && matchesCat;
-            });
-
-            const initialLocal = filterLocal(localProducts);
-            setProducts(initialLocal.length === 0 && searchQuery ? localProducts : initialLocal);
-            setLoading(false); // UI is now populated
-
-            // Priority 2: Try to get API data in background
+            setLoading(true);
             try {
                 let url = '/store/products/';
                 const params = new URLSearchParams();
                 if (currentCategory) params.append('category__slug', currentCategory);
                 if (searchQuery) params.append('search', searchQuery);
 
-                // Use a short timeout for API to keep it snappy
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 1500); 
-
-                const res = await api.get(`${url}?${params.toString()}`, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
+                const res = await api.get(`${url}?${params.toString()}`);
                 const apiProducts = res.data.results || res.data;
-                const finalFilteredLocal = filterLocal(localProducts);
                 
-                // Merge and show final list
-                setProducts([...finalFilteredLocal, ...apiProducts]);
+                setProducts(apiProducts);
             } catch (err) {
-                // If API fails (offline), we already have local data showing
-                console.log("API offline, staying with local data");
+                console.error("Failed to fetch products:", err);
+                setProducts([]);
+            } finally {
+                setLoading(false);
             }
         };
 
         const delayDebounceFn = setTimeout(() => {
             fetchProducts();
-        }, searchQuery ? 300 : 0); // Only debounce if searching
+        }, searchQuery ? 300 : 0);
 
         return () => clearTimeout(delayDebounceFn);
     }, [currentCategory, searchQuery]);

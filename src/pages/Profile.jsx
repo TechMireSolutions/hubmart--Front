@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Mail, Package, Calendar, Settings, LogOut, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../api';
 import '../styles/Profile.css';
 
 const Profile = () => {
@@ -14,13 +15,20 @@ const Profile = () => {
     });
 
     useEffect(() => {
-        // Load local products for stats
-        const localProducts = JSON.parse(localStorage.getItem('demo_products') || '[]');
-        setStats({
-            totalProducts: localProducts.length,
-            activeListings: localProducts.filter(p => p.is_active).length,
-            recentAdditions: localProducts.slice(0, 4) // Set to 4
-        });
+        const fetchStats = async () => {
+            try {
+                const res = await api.get('/store/products/');
+                const apiProducts = res.data.results || res.data;
+                setStats({
+                    totalProducts: apiProducts.length,
+                    activeListings: apiProducts.filter(p => p.is_active).length,
+                    recentAdditions: apiProducts.slice(0, 4)
+                });
+            } catch (err) {
+                console.error("Failed to fetch profile stats:", err);
+            }
+        };
+        fetchStats();
     }, []);
 
     if (!user) {

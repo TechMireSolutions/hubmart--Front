@@ -21,12 +21,23 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        
+        // Prevent interceptor loop or reloading on auth endpoints
+        if (originalRequest.url.includes('/auth/login') || originalRequest.url.includes('/auth/refresh') || originalRequest.url.includes('/auth/register')) {
+            return Promise.reject(error);
+        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const refresh = localStorage.getItem('refresh_token');
+                if (!refresh) throw new Error('No refresh token');
+                
                 const res = await axios.post(`${api.defaults.baseURL}/users/auth/refresh/`, { refresh });
                 localStorage.setItem('access_token', res.data.access);
+                
+                // Update the Authorization header for the retried request
+                originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
                 return api(originalRequest);
             } catch (err) {
                 localStorage.removeItem('access_token');

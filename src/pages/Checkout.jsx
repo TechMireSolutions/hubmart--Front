@@ -41,20 +41,6 @@ const Checkout = () => {
         setLoading(true);
 
         try {
-            // Check if we are in demo mode (no backend connected)
-            const isDemo = true; // Forcing demo mode logic here
-
-            if (isDemo) {
-                // Mocking a successful checkout for demo
-                setTimeout(() => {
-                    clearCart();
-                    alert("DEMO MODE: Order placed successfully! (Bypassing Stripe and Backend)");
-                    navigate('/'); // Or to a success page if one exists
-                    setLoading(false);
-                }, 2000);
-                return;
-            }
-
             // 1. Create the order in Django
             const orderRes = await api.post('/shop/orders/', {
                 ...formData,
@@ -62,9 +48,6 @@ const Checkout = () => {
             });
 
             const orderId = orderRes.data.id;
-
-            // Real-time notification to admin via Socket.io
-            // emitEvent('new_order', { ... });
 
             // 2. Create the Stripe Checkout Session
             const stripeRes = await api.post('/shop/checkout/stripe/create-session/', {
@@ -76,13 +59,8 @@ const Checkout = () => {
 
         } catch (err) {
             console.error("Checkout failed", err);
-            // Fallback for demo mode if API fails
-            setTimeout(() => {
-                clearCart();
-                alert("DEMO MODE: Backend offline. Simulated order success!");
-                navigate('/');
-                setLoading(false);
-            }, 1000);
+            alert("Checkout failed. Please try again.");
+            setLoading(false);
         }
     };
 

@@ -177,6 +177,16 @@
 @media (max-width: 968px) {
     .checkout-layout {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .checkout-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .checkout-header h1 {
+        font-size: 2rem;
     }
 
     .form-grid {
@@ -185,5 +195,10 @@
 
     .checkout-sidebar {
         position: static;
+        order: -1;
+    }
+
+    .order-summary-box {
+        padding: 1.5rem;
     }
 }

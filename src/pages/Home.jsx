@@ -12,17 +12,17 @@ const Home = () => {
 
     useEffect(() => {
         const fetchFeatured = async () => {
+            setLoading(true);
             try {
                 const res = await api.get('/store/products/?limit=4');
                 const apiProducts = res.data.results || res.data;
-                const localProducts = JSON.parse(localStorage.getItem('demo_products') || '[]');
-                setProducts([...localProducts, ...apiProducts].slice(0, 8));
+                setProducts(apiProducts.slice(0, 8));
             } catch (err) {
-                console.error("Failed to fetch featured products, using local only", err);
-                const localProducts = JSON.parse(localStorage.getItem('demo_products') || '[]');
-                setProducts(localProducts);
+                console.error("Failed to fetch featured products", err);
+                setProducts([]);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         fetchFeatured();
     }, []);
